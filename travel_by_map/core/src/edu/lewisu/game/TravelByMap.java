@@ -18,16 +18,16 @@ import com.badlogic.gdx.math.MathUtils;
 
 public class TravelByMap extends ApplicationAdapter {
 	SpriteBatch batch;
-	Texture tex, img2, background1, background2;
+	Texture moreDetailed, lessDetailed, background1, background2;
+	Texture current;
 	TextureRegion img;
 	OrthographicCamera cam;
 	int WIDTH;
 	int HEIGHT;
+	
 	/*
 	 the state of the game is the data that it manages.
 	 that data controls game play and what appears on the screen.
-	 in this game, the player is the picture.
-	 we need to manage x and y position and the rotation
 	 */
 	int imgX, imgY; // state variables associated with the location
 	int imgWidth, imgHeight;
@@ -44,15 +44,16 @@ public class TravelByMap extends ApplicationAdapter {
 		displayHeight = Gdx.graphics.getHeight();
 		displayWidth = Gdx.graphics.getWidth();
 		background1 = new Texture("underCity.jpg");
-		background2 = new Texture("underCity.jpg");	
-		img2 = new Texture("underEarth.jpg");
-		tex = new Texture("earth.jpg");
-		img = new TextureRegion(tex); // gives rotation abilities to the image we loaded in
-		imgWidth = tex.getWidth();
-		imgHeight = tex.getHeight();
+		background2 = new Texture("underCity.jpg");
+		lessDetailed = new Texture("underEarth.jpg");
+		moreDetailed = new Texture("earth.jpg");	
+		img = new TextureRegion(moreDetailed); // gives rotation abilities to the image we loaded in
+		imgWidth = moreDetailed.getWidth();
+		imgHeight = moreDetailed.getHeight();
 		imgAngle = 0;
 		imgX = 175;
 		imgY = 175;
+		//current = lessDetailed;
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
 		cam = new OrthographicCamera(WIDTH, HEIGHT);
@@ -81,8 +82,10 @@ public class TravelByMap extends ApplicationAdapter {
 			if (shiftHeld) {
 				//zoom
 				cam.zoom -= 0.01;
+				current = lessDetailed;
 			} else {
 				cam.translate(0,1);
+				current = moreDetailed;
 			}
 			cameraNeedsUpdating = true;
 		}
@@ -90,8 +93,10 @@ public class TravelByMap extends ApplicationAdapter {
 			if (shiftHeld) {
 				//zoom
 				cam.zoom += 0.01;
+				current = moreDetailed;
 			} else {
 				cam.translate(0,-1);
+				current = lessDetailed;
 			}
 			cameraNeedsUpdating = true;
 		}
@@ -161,11 +166,11 @@ public class TravelByMap extends ApplicationAdapter {
 		batch.draw(background2, backgroundX + displayWidth, 0, displayWidth,displayHeight);
 		batch.draw(img, imgX, imgY, imgWidth/2, imgHeight/2, imgWidth, imgHeight, 1, 1, imgAngle);
 		//batch.draw(img, imgX, imgY);
-		batch.draw(img2, imgX, imgY);
+		batch.draw(lessDetailed, imgX, imgY);
 		batch.end();
 
-		backgroundX -= backgroundSpeed;
 
+		backgroundX -= backgroundSpeed;
 		if (backgroundX + displayWidth == 0) {
 			backgroundX = 0;
 		}
